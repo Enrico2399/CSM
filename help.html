@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOS Help - MoodWheel</title>
+    <style>
+        :root {
+            --bg-dark: #0f0f0f;
+            --text-light: #f4f4f4;
+            --danger: #ff4d4d;
+            --accent: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --wa-green: #25D366;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: fixed; top: 0; width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            display: flex; justify-content: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .navbar a {
+            color: white; text-decoration: none;
+            padding: 15px 25px; font-weight: bold; text-transform: uppercase;
+            font-size: 0.8rem; letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 100px auto 40px auto;
+            padding: 20px;
+        }
+
+        /* EMERGENCY SECTION */
+        .emergency-banner {
+            background: linear-gradient(45deg, #8b0000, #ff4d4d);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(255, 77, 77, 0.2);
+        }
+        .emergency-banner h1 { margin: 0 0 10px 0; font-size: 2rem; }
+        .emergency-banner p { font-size: 1.1rem; margin-bottom: 20px; }
+        .num-list { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .num-item { background: white; color: black; padding: 10px 20px; border-radius: 50px; font-weight: bold; font-size: 1.2rem; }
+
+        /* BUILDER BOX - ARROTONDATO E CENTRATO */
+        .builder-box {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px; /* Bordi arrotondati come i blocchi sotto */
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            text-align: center; /* Centra il contenuto */
+            margin-bottom: 40px;
+        }
+
+        .builder-box h2 {
+            color: var(--text-light);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .builder-box label {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            opacity: 0.9;
+        }
+
+        /* Dropdown Centrato */
+        select#issue-type {
+            background: #1a1a1a;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            margin: 0 auto 25px auto;
+            display: block;
+            padding: 12px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        /* Input e Textarea Grandi e Bianchi */
+        input[type="text"], textarea {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+            padding: 15px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 20px auto;
+            display: block;
+            font-size: 1.1rem;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        textarea#comfort-resource {
+            font-size: 1.2rem; /* Più grande per "ascoltare" meglio visivamente */
+        }
+
+        /* Bottoni Azione */
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: white;
+            color: black;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        .btn-action:hover { transform: scale(1.02); }
+
+        /* CRISIS CARDS */
+        .crisis-section { margin-bottom: 30px; }
+        .crisis-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            border-left: 5px solid var(--danger);
+            animation: slideIn 0.5s ease-out;
+        }
+        .crisis-card h2 { margin-top: 0; color: var(--danger); }
+        
+        /* MODE SELECTOR */
+        .mode-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        .mode-btn {
+            flex: 1;
+            max-width: 200px;
+            padding: 15px;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            color: #888;
+        }
+        input[name="help-mode"]:checked + .mode-btn {
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .mode-btn span { font-size: 1.8rem; display: block; margin-bottom: 5px; }
+
+        /* COMMUNITY SUGGESTIONS */
+        .community-suggestions {
+            margin-top: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 15px;
+        }
+        .suggestion-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .vote-section { display: flex; align-items: center; gap: 10px; }
+        .vote-btn {
+            background: rgba(255,255,255,0.1); border: none; color: white;
+            padding: 5px 10px; border-radius: 5px; cursor: pointer;
+        }
+
+        .add-comment { display: flex; gap: 10px; margin-top: 15px; }
+        .add-comment input { margin: 0; flex-grow: 1; text-align: left; }
+        .btn-send { background: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+
+        #wa-section, #self-section { animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html">Mood Wheel</a>
+        <a href="archetipi.html">Pantheon Archetipico</a>
+        <a href="help.html" style="border-bottom: 2px solid white;">SOS Help</a>
+    </nav>
+
+    <div class="container">
+        <div class="emergency-banner">
+            <h1>Non sei solo.</h1>
+            <p>Se sei in pericolo immediato, chiama subito uno di questi numeri:</p>
+            <div class="num-list">
+                <div class="num-item">📞 112</div>
+                <div class="num-item">📞 196</div>
+                <div class="num-item">📞 02 2327 2327</div>
+            </div>
+        </div>
+
+        <div class="builder-box">
+            <h2>🛠️ Creatore di Aiuto Personalizzato</h2>
+            
+            <label>Cosa stai attraversando?</label>
+            <select id="issue-type">
+                <option value="" disabled selected>Seleziona la tua condizione...</option>
+                <option value="ansia">Ansia / Attacco di Panico</option>
+                <option value="suicidio">Pensieri Oscuri / Crisi Grave</option>
+                <option value="fisico">Dolore Fisico / Malessere</option>
+                <option value="rabbia">Rabbia Incontrollata</option>
+            </select>
+
+            <label>Metodo di supporto:</label>
+            <div class="mode-selector">
+                <label>
+                    <input type="radio" name="help-mode" value="wa" checked onchange="toggleMode()">
+                    <div class="mode-btn">
+                        <span>📱</span>
+                        <strong>Contatto Diretto</strong>
+                    </div>
+                </label>
+                <label>
+                    <input type="radio" name="help-mode" value="self" onchange="toggleMode()">
+                    <div class="mode-btn">
+                        <span>📖</span>
+                        <strong>Auto-Aiuto</strong>
+                    </div>
+                </label>
+            </div>
+
+            <div id="wa-section">
+                <label>Contatto di Fiducia</label>
+                <input type="text" id="trust-phone" placeholder="Numero (es. 393331234567)">
+                <label>Messaggio preimpostato</label>
+                <textarea id="sos-text" rows="2">Ho bisogno di aiuto, per favore contattami.</textarea>
+            </div>
+
+            <div id="self-section" style="display: none;">
+                <label>La tua ancora di salvezza (testo o link)</label>
+                <textarea id="comfort-resource" rows="4" placeholder="Scrivi qualcosa di importante..."></textarea>
+            </div>
+
+            <button class="btn-action" id="main-action-btn" onclick="executePlan()" style="margin-top: 10px; width: 100%; max-width: 400px;">
+                FATTI AIUTARE
+            </button>
+        </div>
+
+        <div id="crisis-container"></div>
+    </div>
+
+    <script>
+        const crisisData = [
+            {
+                id: "suicide",
+                title: "Pensieri Suicidi",
+                action: "Non agire subito. Prometti a te stesso di aspettare 24 ore. La tua mente ti sta mentendo: il dolore può passare.",
+                comments: [
+                    { text: "Chiama il Telefono Amico, mi hanno salvato la vita.", likes: 45 },
+                    { text: "Bagnati il viso con acqua gelata per resettare i sensi.", likes: 12 }
+                ]
+            },
+            {
+                id: "panic",
+                title: "Attacco di Panico",
+                action: "Tecnica 5-4-3-2-1: identifica 5 cose che vedi, 4 che puoi toccare. Respira profondamente.",
+                comments: [
+                    { text: "Un attacco dura mediamente 10-20 minuti. Passerà.", likes: 21 }
+                ]
+            }
+        ];
+
+        function renderCrisis() {
+            const container = document.getElementById('crisis-container');
+            container.innerHTML = '';
+            crisisData.forEach(crisis => {
+                const section = document.createElement('div');
+                section.className = 'crisis-section';
+                section.innerHTML = `
+                    <div class="crisis-card">
+                        <h2>${crisis.title}</h2>
+                        <p><strong>Cosa fare ora:</strong> ${crisis.action}</p>
+                        <div class="community-suggestions">
+                            <div id="comments-${crisis.id}">
+                                ${crisis.comments.map(c => `
+                                    <div class="suggestion-item">
+                                        <span>${c.text}</span>
+                                        <div class="vote-section">
+                                            <span>${c.likes}</span>
+                                            <button class="vote-btn" onclick="addLike('${crisis.id}', '${c.text}')">▲</button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="add-comment">
+                                <input type="text" id="input-${crisis.id}" placeholder="Aggiungi un consiglio...">
+                                <button class="btn-send" onclick="postComment('${crisis.id}')">Invia</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(section);
+            });
+        }
+
+        function addLike(crisisId, commentText) {
+            const crisis = crisisData.find(c => c.id === crisisId);
+            const comment = crisis.comments.find(c => c.text === commentText);
+            comment.likes++;
+            renderCrisis();
+        }
+
+        function postComment(crisisId) {
+            const input = document.getElementById(`input-${crisisId}`);
+            if (input.value.trim() === "") return;
+            const crisis = crisisData.find(c => c.id === crisisId);
+            crisis.comments.push({ text: input.value, likes: 1 });
+            input.value = '';
+            renderCrisis();
+        }
+
+        function toggleMode() {
+            const mode = document.querySelector('input[name="help-mode"]:checked').value;
+            const btn = document.getElementById('main-action-btn');
+            document.getElementById('wa-section').style.display = mode === 'wa' ? 'block' : 'none';
+            document.getElementById('self-section').style.display = mode === 'self' ? 'block' : 'none';
+            btn.innerText = mode === 'wa' ? 'FATTI AIUTARE' : 'ATTIVA AUTO-AIUTO';
+        }
+
+        function executePlan() {
+            const mode = document.querySelector('input[name="help-mode"]:checked').value;
+            const issueSelect = document.getElementById('issue-type');
+            const issueText = issueSelect.options[issueSelect.selectedIndex].text;
+            const container = document.getElementById('crisis-container');
+            
+            let cardHTML = "";
+
+            if (mode === 'wa') {
+                const phone = document.getElementById('trust-phone').value;
+                const text = encodeURIComponent(document.getElementById('sos-text').value);
+                const rawText = document.getElementById('sos-text').value;
+                
+                if(!phone) return alert("Inserisci un numero di telefono!");
+
+                cardHTML = `
+                    <div class="crisis-card" style="border-left-color: var(--wa-green);">
+                        <h2 style="color: var(--wa-green);">📱 Contatto di Fiducia Pronto</h2>
+                        <p>Ho preparato i canali di comunicazione per te.</p>
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1);">
+                            <small style="opacity: 0.6;">Messaggio pronto:</small><br>
+                            "${rawText}"
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <a href="https://wa.me/${phone}?text=${text}" target="_blank" class="btn-action" style="background: #25D366; color: white; flex: 1;">
+                                <span>💬</span> WhatsApp
+                            </a>
+                            <a href="tel:${phone}" class="btn-action" style="background: white; color: black; flex: 1;">
+                                <span>📞</span> Telefono
+                            </a>
+                        </div>
+                    </div>
+                `;
+                window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+            } else {
+                const resource = document.getElementById('comfort-resource').value || "Respira profondamente. Tutto passerà.";
+                cardHTML = `
+                    <div class="crisis-card" style="border-left-color: white;">
+                        <h2 style="color: white;">✨ Kit di Auto-Aiuto</h2>
+                        <p><strong>Per:</strong> ${issueSelect.value ? issueText : "Te stesso"}</p>
+                        <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px; font-style: italic; border: 1px dashed rgba(255,255,255,0.3); color: #fff; font-size: 1.3rem; text-align: center;">
+                            ${resource}
+                        </div>
+                    </div>
+                `;
+            }
+
+            const newSection = document.createElement('div');
+            newSection.className = 'crisis-section';
+            newSection.innerHTML = cardHTML;
+            container.insertBefore(newSection, container.firstChild);
+            newSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        renderCrisis();
+    </script>
+</body>
+</html>

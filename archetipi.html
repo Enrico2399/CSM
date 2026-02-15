@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pantheon Archetipico</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --text-light: #f4f4f4;
+            --accent: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.08);
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            position: fixed; top: 0; width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            display: flex; justify-content: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .navbar a {
+            color: white; text-decoration: none;
+            padding: 15px 25px; font-weight: bold; text-transform: uppercase;
+            font-size: 0.8rem; letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 100px auto 40px auto;
+            padding: 20px;
+        }
+
+        header { text-align: center; margin-bottom: 30px; }
+
+        .archetype-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .archetype-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .archetype-card:hover { background: rgba(255,255,255,0.15); transform: translateY(-5px); }
+        .archetype-card.selected { border-color: var(--accent); background: rgba(255,255,255,0.2); box-shadow: 0 0 15px var(--accent); }
+        .archetype-card span { font-size: 2.5rem; display: block; margin-bottom: 10px; }
+        .archetype-card h4 { margin: 0; font-size: 0.9rem; }
+
+        /* Area Descrizione Dinamica */
+        #dynamic-description-area {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px dashed rgba(255,255,255,0.2);
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) { .dashboard { grid-template-columns: 1fr; } }
+
+        .input-box { background: var(--card-bg); padding: 25px; border-radius: 20px; }
+
+        textarea {
+            width: 100%; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 10px;
+            color: white; padding: 15px; resize: none; box-sizing: border-box;
+            margin-bottom: 15px; font-family: inherit;
+        }
+
+        .btn-add {
+            width: 100%; padding: 12px; border-radius: 10px; border: none;
+            background: white; color: black; font-weight: bold; cursor: pointer;
+        }
+
+        .chart-container {
+            background: var(--card-bg); padding: 20px;
+            border-radius: 20px; height: 400px; position: relative;
+        }
+
+        .advice-box {
+            grid-column: 1 / -1;
+            background: rgba(255,255,255,0.05);
+            padding: 25px; border-radius: 15px;
+            border-left: 4px solid #fff; margin-top: 20px;
+            line-height: 1.6;
+        }
+        .advice-title { color: #f1c40f; font-weight: bold; display: block; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html">Mood Wheel</a>
+        <a href="archetipi.html" style="border-bottom: 2px solid white;">Pantheon Archetipico</a>
+        <a href="help.html">SOS Help</a>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Pantheon Archetipico</h1>
+            <p>Seleziona un'icona per scoprirne il significato e mappare i tuoi pensieri.</p>
+        </header>
+
+        <div class="archetype-grid" id="grid"></div>
+
+        <div id="dynamic-description-area" style="display: none;">
+            <h2 id="desc-title" style="margin-top:0;"></h2>
+            <p id="desc-text" style="color: #ccc;"></p>
+        </div>
+
+        <div class="dashboard">
+            <div class="input-box">
+                <h3 id="selected-label">Clicca su un archetipo sopra</h3>
+                <textarea id="thought-input" rows="5" placeholder="Quale pensiero vuoi associare a questo archetipo?"></textarea>
+                <button class="btn-add" onclick="saveThought()">Registra nel Pantheon</button>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="archetypeChart"></canvas>
+            </div>
+
+            <div class="advice-box" id="advice">
+                Seleziona gli archetipi e registra i tuoi pensieri per generare un'analisi personalizzata del tuo equilibrio interiore.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const archetypes = {
+            saggio: { 
+                name: "Il Saggio", icon: "📚", color: "#3498db",
+                description: "Cerca la verità e la comprensione oggettiva. Si manifesta quando analizzi, studi o cerchi di dare un senso logico agli eventi della vita.",
+                highAdvice: "Il tuo lato analitico è forte, ma attento a non cadere nella 'paralisi da analisi'.<br>",
+                lowAdvice: "Nutri la tua curiosità: prova a leggere un saggio o a dedicare tempo alla riflessione pura.<br>"
+            },
+            eroe: { 
+                name: "L'Eroe", icon: "⚔️", color: "#e74c3c",
+                description: "Rappresenta la forza di volontà e il superamento delle sfide. Emerge quando agisci con coraggio, disciplina e determinazione verso un obiettivo.",
+                highAdvice: "Sei in una fase di grande azione. Ricorda di scegliere le tue battaglie per non esaurire le energie.<br>",
+                lowAdvice: "Affronta una piccola sfida che stai rimandando: l'azione genera fiducia.<br>"
+            },
+            esploratore: { 
+                name: "L'Esploratore", icon: "🗺️", color: "#2ecc71",
+                description: "Spinge verso la libertà e la scoperta di nuovi orizzonti. È attivo quando cerchi l'indipendenza o desideri uscire dalla tua zona di comfort.",
+                highAdvice: "La tua sete di novità è alta. Assicurati di non scappare dalle responsabilità nel tuo viaggio.<br>",
+                lowAdvice: "Cambia strada per tornare a casa o visita un posto nuovo: rompi la routine.<br>"
+            },
+            creatore: { 
+                name: "Il Creatore", icon: "🎨", color: "#f1c40f",
+                description: "La voce dell'immaginazione e dell'espressione personale. Si attiva quando dai forma a qualcosa di nuovo, che sia un'idea, un progetto o un'opera d'arte.",
+                highAdvice: "La creatività scorre potente. Cerca di portare a termine un progetto prima di iniziarne altri dieci.<br>",
+                lowAdvice: "Dedicati a un'attività manuale o creativa senza giudicarti, solo per il gusto di fare.<br>"
+            },
+            sovrano: { 
+                name: "Il Sovrano", icon: "👑", color: "#9b59b6",
+                description: "Incarna il controllo, l'ordine e la responsabilità. Si manifesta quando organizzi la tua vita, guidi gli altri o crei stabilità nel tuo ambiente.",
+                highAdvice: "Hai il controllo della situazione. Attento a non diventare troppo rigido o dominante con te stesso.<br>",
+                lowAdvice: "Prendi in mano le redini di un'area caotica della tua vita: organizza la tua agenda o i tuoi spazi.<br>"
+            },
+            ribelle: { 
+                name: "Il Ribelle", icon: "⚡", color: "#e67e22",
+                description: "Rappresenta il cambiamento radicale e la rottura degli schemi obsoleti. Emerge quando senti il bisogno di trasformazione o di andare controcorrente.",
+                highAdvice: "Il tuo spirito critico è acceso. Assicurati di distruggere solo ciò che vuoi davvero ricostruire meglio.<br>",
+                lowAdvice: "Chiediti: 'Quale regola inutile sto seguendo?' e prova a fare l'opposto per un giorno.<br>"
+            }
+        };
+
+        let selectedKey = null;
+        let dataStore = JSON.parse(localStorage.getItem('archetypeData')) || {
+            saggio: 0, eroe: 0, esploratore: 0, creatore: 0, sovrano: 0, ribelle: 0
+        };
+
+        const grid = document.getElementById('grid');
+        Object.keys(archetypes).forEach(key => {
+            const card = document.createElement('div');
+            card.className = 'archetype-card';
+            card.innerHTML = `<span>${archetypes[key].icon}</span><h4>${archetypes[key].name}</h4>`;
+            card.onclick = () => selectArchetype(key, card);
+            grid.appendChild(card);
+        });
+
+        function selectArchetype(key, cardElement) {
+            document.querySelectorAll('.archetype-card').forEach(c => c.classList.remove('selected'));
+            cardElement.classList.add('selected');
+            selectedKey = key;
+
+            const descArea = document.getElementById('dynamic-description-area');
+            document.getElementById('desc-title').innerText = archetypes[key].icon + " " + archetypes[key].name;
+            document.getElementById('desc-text').innerText = archetypes[key].description;
+            descArea.style.display = 'block';
+
+            document.getElementById('selected-label').innerText = "Pensiero per: " + archetypes[key].name;
+        }
+
+        const ctx = document.getElementById('archetypeChart').getContext('2d');
+        let myChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: Object.values(archetypes).map(a => a.name),
+                datasets: [{
+                    data: Object.keys(archetypes).map(key => dataStore[key]),
+                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                    borderColor: '#ffffff',
+                    pointBackgroundColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                scales: { r: { 
+                    angleLines: { color: 'rgba(255,255,255,0.2)' },
+                    grid: { color: 'rgba(255,255,255,0.2)' },
+                    pointLabels: { color: '#fff' },
+                    ticks: { display: false, stepSize: 1 } 
+                }},
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        function saveThought() {
+            const input = document.getElementById('thought-input');
+            if (!selectedKey) return alert("Seleziona un archetipo!");
+            if (input.value.trim() === "") return alert("Scrivi un pensiero!");
+
+            dataStore[selectedKey] += 1;
+            localStorage.setItem('archetypeData', JSON.stringify(dataStore));
+            myChart.data.datasets[0].data = Object.keys(archetypes).map(key => dataStore[key]);
+            myChart.update();
+            input.value = "";
+            updateAnalysis();
+        }
+
+        function updateAnalysis() {
+            const adviceBox = document.getElementById('advice');
+            const values = Object.values(dataStore);
+            const total = values.reduce((a, b) => a + b, 0);
+
+            if (total === 0) return;
+
+            const keys = Object.keys(dataStore);
+            const maxVal = Math.max(...values);
+            const minVal = Math.min(...values);
+
+            const dominantKeys = keys.filter(k => dataStore[k] === maxVal);
+            const dormantKeys = keys.filter(k => dataStore[k] === minVal);
+
+            let html = `<strong>Analisi del Pantheon:</strong><br>`;
+            
+            // Suggerimento per il dominante (Punteggio Alto)
+            html += `<span class="advice-title">Dominante: ${dominantKeys.map(k => archetypes[k].name).join(", ")}</span>`;
+            html += dominantKeys.map(k => archetypes[k].highAdvice).join(" ") + "<br><br>";
+
+            // Suggerimento per il dormiente (Punteggio Basso)
+            html += `<span class="advice-title">Da Risvegliare: ${dormantKeys.map(k => archetypes[k].name).join(", ")}</span>`;
+            html += dormantKeys.map(k => archetypes[k].lowAdvice).join(" ");
+
+            adviceBox.innerHTML = html;
+        }
+
+        updateAnalysis();
+    </script>
+</body>
+</html>
