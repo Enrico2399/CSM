@@ -167,6 +167,7 @@
         <a href="index.html" style="border-bottom: 2px solid white;">Mood Wheel</a>
         <a href="archetipi.html">Pantheon Archetipico</a>
         <a href="help.html">SOS Help</a>
+        <a href="#" onclick="openProfile()" id="profile-trigger">👤 <span id="nav-user-name">Profilo</span></a>
     </nav>
     <section id="home">
         <h1>Come ti senti oggi?</h1>
@@ -303,8 +304,79 @@
         }
 
         function closePopup() { document.getElementById('popup').style.display = 'none'; }
+
+        // Funzioni Profilo
+        function openProfile() {
+            document.getElementById('profile-modal').style.display = 'flex';
+            const savedName = localStorage.getItem('moodWheel_userName');
+            if(savedName) document.getElementById('user-name-input').value = savedName;
+        }
+
+        function closeProfile() {
+            document.getElementById('profile-modal').style.display = 'none';
+        }
+
+        function saveProfile() {
+            const name = document.getElementById('user-name-input').value;
+            if(name.trim() !== "") {
+                localStorage.setItem('moodWheel_userName', name);
+                updateNavName();
+                closeProfile();
+            }
+        }
+
+        function updateNavName() {
+            const savedName = localStorage.getItem('moodWheel_userName');
+            if(savedName) {
+                document.getElementById('nav-user-name').innerText = savedName;
+            }
+        }
+
+        // Funzione per cancellare TUTTO
+        function clearAllData() {
+            if(confirm("Sei sicuro? Questo cancellerà il tuo nome, i tuoi pensieri e le impostazioni SOS.")) {
+                localStorage.clear();
+                location.reload(); // Ricarica la pagina per resettare la demo
+            }
+        }
+
+        // Esegui all'avvio
+        window.addEventListener('DOMContentLoaded', updateNavName);
+
+        function addTip() {
+        const input = document.getElementById('new-tip');
+        if(input.value.trim() !== "") {
+            const li = document.createElement('li');
+            // Aggiungiamo un id unico o semplicemente gestiamo la rimozione del parent
+            li.innerHTML = `
+                <span>✨ ${input.value}</span>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <button class="vote-btn">▲ 1</button>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:0.8rem;">✖</button>
+                </div>
+            `;
+            document.getElementById('community-list').appendChild(li);
+            input.value = "";
+            
+            // Se vuoi salvare anche questi in localStorage per la demo:
+            // salvaListaInStorage(); 
+        }
+    }
     </script>
+    <div id="profile-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:2000; justify-content:center; align-items:center; backdrop-filter: blur(5px);">
+    <div style="background:var(--bg-dark); padding:30px; border-radius:20px; border:1px solid var(--border-color); width:320px; text-align:center;">
+        <h3>Il tuo Profilo</h3>
+        <input type="text" id="user-name-input" placeholder="Il tuo nome" style="width:100%; padding:10px; margin-bottom:15px; border-radius:10px; border:none; background:var(--input-bg); color:white;">
+        
+        <button onclick="saveProfile()" style="width:100%; padding:10px; border-radius:10px; border:none; background:var(--accent); color:black; cursor:pointer; font-weight:bold; margin-bottom:10px;">Salva Nome</button>
+        
+        <hr style="border:0; border-top:1px solid var(--border-color); margin:20px 0;">
+        
+        <p style="font-size:0.8rem; opacity:0.7;">Zona Pericolosa:</p>
+        <button onclick="clearAllData()" style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--danger); background:transparent; color:var(--danger); cursor:pointer;">CANCELLA TUTTI I DATI</button>
+        
+        <p onclick="closeProfile()" style="margin-top:20px; cursor:pointer; opacity:0.5; font-size:0.9rem;">Chiudi</p>
+    </div>
+</div>
 </body>
-
 </html>
-
