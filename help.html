@@ -271,6 +271,7 @@
         <div id="crisis-container"></div>
     </div>
 
+    <script src="app.js"></script>
     <script>
         const crisisData = [
             {
@@ -404,43 +405,7 @@
         }
 
         renderCrisis();
-        // Funzioni Profilo
-        function openProfile() {
-            document.getElementById('profile-modal').style.display = 'flex';
-            const savedName = localStorage.getItem('moodWheel_userName');
-            if(savedName) document.getElementById('user-name-input').value = savedName;
-        }
-
-        function closeProfile() {
-            document.getElementById('profile-modal').style.display = 'none';
-        }
-
-        function saveProfile() {
-            const name = document.getElementById('user-name-input').value;
-            if(name.trim() !== "") {
-                localStorage.setItem('moodWheel_userName', name);
-                updateNavName();
-                closeProfile();
-            }
-        }
-
-        function updateNavName() {
-            const savedName = localStorage.getItem('moodWheel_userName');
-            if(savedName) {
-                document.getElementById('nav-user-name').innerText = savedName;
-            }
-        }
-
-        // Funzione per cancellare TUTTO
-        function clearAllData() {
-            if(confirm("Sei sicuro? Questo cancellerà il tuo nome, i tuoi pensieri e le impostazioni SOS.")) {
-                localStorage.clear();
-                location.reload(); // Ricarica la pagina per resettare la demo
-            }
-        }
-
-        // Esegui all'avvio
-        window.addEventListener('DOMContentLoaded', updateNavName);
+    
         function addTip() {
         const input = document.getElementById('new-tip');
         if(input.value.trim() !== "") {
@@ -478,4 +443,3 @@
 </div>
 </body>
 </html>
-
