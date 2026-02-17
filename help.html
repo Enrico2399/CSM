@@ -349,8 +349,15 @@
             document.getElementById('self-section').style.display = mode === 'self' ? 'block' : 'none';
             btn.innerText = mode === 'wa' ? 'FATTI AIUTARE' : 'ATTIVA AUTO-AIUTO';
         }
+        // Carica numero salvato all'avvio
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedPhone = localStorage.getItem('sos_phone');
+            if(savedPhone) document.getElementById('trust-phone').value = savedPhone;
+        });
 
         function executePlan() {
+            const phone = document.getElementById('trust-phone').value;
+            localStorage.setItem('sos_phone', phone);
             const mode = document.querySelector('input[name="help-mode"]:checked').value;
             const issueSelect = document.getElementById('issue-type');
             const issueText = issueSelect.options[issueSelect.selectedIndex].text;
