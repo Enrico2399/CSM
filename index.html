@@ -291,15 +291,42 @@
             document.getElementById('detail-view').style.display = 'none';
         }
 
+        // Carica i tips salvati all'avvio
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTips = JSON.parse(localStorage.getItem('community_tips') || "[]");
+            const list = document.getElementById('community-list');
+            savedTips.forEach(tip => renderTip(tip, list));
+        });
+
         function addTip() {
             const input = document.getElementById('new-tip');
-            if(input.value.trim() !== "") {
-                const li = document.createElement('li');
-                li.innerHTML = `✨ ${input.value} <button class="vote-btn">▲ 1</button>`;
-                document.getElementById('community-list').appendChild(li);
+            const text = input.value.trim();
+            if(text !== "") {
+                const savedTips = JSON.parse(localStorage.getItem('community_tips') || "[]");
+                savedTips.push(text);
+                localStorage.setItem('community_tips', JSON.stringify(savedTips));
+                
+                renderTip(text, document.getElementById('community-list'));
                 input.value = "";
             }
         }
+
+        function renderTip(text, container) {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span>✨ ${text}</span>
+                <button onclick="removeTip('${text}', this)" style="background:none; border:none; color:var(--danger); cursor:pointer;">✖</button>
+            `;
+            container.appendChild(li);
+        }
+
+        function removeTip(text, btn) {
+            let savedTips = JSON.parse(localStorage.getItem('community_tips') || "[]");
+            savedTips = savedTips.filter(t => t !== text);
+            localStorage.setItem('community_tips', JSON.stringify(savedTips));
+            btn.parentElement.remove();
+        }
+        
         const legend = document.getElementById('color-legend');
         keys.forEach(key => {
             const item = document.createElement('div');
@@ -317,25 +344,7 @@
 
         function closePopup() { document.getElementById('popup').style.display = 'none'; }
 
-        function addTip() {
-        const input = document.getElementById('new-tip');
-        if(input.value.trim() !== "") {
-            const li = document.createElement('li');
-            // Aggiungiamo un id unico o semplicemente gestiamo la rimozione del parent
-            li.innerHTML = `
-                <span>✨ ${input.value}</span>
-                <div style="display:flex; gap:10px; align-items:center;">
-                    <button class="vote-btn">▲ 1</button>
-                    <button onclick="this.parentElement.parentElement.remove()" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:0.8rem;">✖</button>
-                </div>
-            `;
-            document.getElementById('community-list').appendChild(li);
-            input.value = "";
-            
-            // Se vuoi salvare anche questi in localStorage per la demo:
-            // salvaListaInStorage(); 
-        }
-    }
+        
     </script>
     <div id="profile-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:2000; justify-content:center; align-items:center; backdrop-filter: blur(5px);">
     <div style="background:var(--bg-dark); padding:30px; border-radius:20px; border:1px solid var(--border-color); width:320px; text-align:center;">
