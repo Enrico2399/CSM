@@ -171,6 +171,23 @@
                 font-size: 8px;
             }
         }
+        .header-section { text-align: center; margin-bottom: 60px; }
+        .wip-badge {
+            display: inline-block;
+            background: var(--accent-purple);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            --bg-dark: #0f0f0f;
+            --text-light: #f4f4f4;
+            --accent-blue: #4da6ff;
+            --accent-purple: #a855f7;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -186,7 +203,11 @@
         <div class="wheel-container" id="wheel">
             </div>
     </section>
-    <p></p><br>
+    <div class="header-section">
+    <div class="wip-badge">
+        <a href="roadmap.html">
+            <button style="color:white; background: none; border: none;"> Work in Progress </button>
+        </a></div></div>
     <div class="legend-container" id="color-legend"></div>
 
     <div id="popup" class="popup-overlay" onclick="closePopup()">
