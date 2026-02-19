@@ -1,0 +1,90 @@
+Il contenitore 'Creatore di Aiuto Personalizzato' deve essere con i bordi arrotondati come i blocchi sotto, il flag 'Contatto Diretto' genera una 'card' sotto come lo fa 'Auto-Aiuto' con la dofgfrenza che questa cart ha le icone 'whatsapp' e 'telefono' per il contatto nella card creata con il 'messaggio preimpostato', inoltre voglio che il blocco di selezione 'Cosa stai attraversando?' sia al centro e non allineato a sinistra e anche devono essere allineati al centro i blocchi 'Contatto di Fiducia' e 'Messaggio preimpostato' e 'La tua ancora di salvezza (testo o link)' che deve avere la zona di testo grande con il testo in bianco così si può ascoltare, il blocco 'contatto di fiducia' deve essere più grande con testo bianco e anche messaggio pre impostato deve essere più grande centrato con testo bianco, non modificare il resto del codice della pagina
+
+
+
+Voglio un sito con come home un disco con dentro dei colori che corrispondono a delle icone che rappresentano lo stato d'animo
+
+Colore	Emozioni Positive	Emozioni Negative	Effetti Psicologici	Applicazioni Pratiche
+Rosso
+Passione, Amore, Energia, Coraggio	Rabbia, Pericolo, Aggressività	Stimola il sistema nervoso, aumenta la frequenza cardiaca, accelera il respiro	Evidenziare informazioni importanti, stimolare l'appetito, creare senso di urgenza
+Giallo
+Felicità, Ottimismo, Creatività, Chiarezza	Ansia, Frustrazione, Paura	Stimola la mente, migliora la concentrazione, attiva la memoria	Stimolare processi mentali, migliorare l'umore, evidenziare elementi chiave
+Blu
+Calma, Fiducia, Serenità, Sicurezza	Freddezza, Distacco, Malinconia	Riduce la pressione sanguigna, rallenta il respiro, favorisce il rilassamento	Creare ambienti tranquilli, favorire la concentrazione, comunicare affidabilità
+
+Colore	Emozioni Positive	Emozioni Negative	Effetti Psicologici	Applicazioni Pratiche
+Verde
+Armonia, Crescita, Equilibrio, Speranza	Invidia, Stagnazione, Noia	Riduce lo stress, favorisce l'equilibrio, migliora la vista	Creare ambienti rilassanti, favorire la concentrazione, simboleggiare crescita
+Arancione
+Entusiasmo, Calore, Socievolezza, Energia	Superficialità, Impulsività, Esibizionismo	Stimola la creatività, aumenta l'energia, favorisce la socializzazione	Stimolare conversazioni, aumentare l'appetito, creare ambienti accoglienti
+Viola
+Creatività, Spiritualità, Lusso, Mistero	Malinconia, Solitudine, Arroganza	Stimola l'immaginazione, favorisce l'introspezione, calma la mente	Stimolare la creatività, creare atmosfere sofisticate, favorire la meditazione
+
+Colore	Emozioni Positive	Emozioni Negative	Effetti Psicologici	Applicazioni Pratiche
+Bianco
+Purezza, Semplicità, Perfezione, Innocenza	Freddezza, Sterilità, Isolamento	Crea sensazione di spazio, favorisce la chiarezza mentale, simboleggia nuovo inizio	Creare sensazione di pulizia, ampliare visivamente gli spazi, base per altri colori
+Nero
+Eleganza, Potere, Autorità, Sofisticazione	Oppressione, Tristezza, Paura	Comunica serietà, crea sensazione di peso, definisce confini	Creare contrasto, comunicare eleganza, definire spazi
+Grigio
+Neutralità, Equilibrio, Calma, Formalità	Depressione, Indecisione, Monotonia	Riduce stimoli visivi, crea sensazione di stabilità, favorisce la concentrazione	Creare sfondi neutri, bilanciare colori vivaci, comunicare professionalità
+
+---------------------------
+Così dentro al colore c'è la descrizione e un area con i cosigli e puoi fare degli esercizi per quel colore in particolare e un are blog/comunity con i suggerimenti che possono essere votati 
+
+
+Presentare una demo che tocca la salute mentale richiede un equilibrio delicato tra **tecnologia** ed **empatia**. Per rendere il progetto un vero strumento di supporto e non solo un esercizio di stile, ecco alcuni suggerimenti su cosa potresti aggiungere, sia a livello di funzionalità che di contenuto:
+
+---
+
+### 1. Diario Emozionale (Mood Tracker)
+
+Attualmente la ruota permette di esplorare i colori, ma una demo efficace dovrebbe mostrare l'evoluzione nel tempo.
+
+* **Cosa aggiungere:** Una sezione "Cronologia" dove il JSON di sessione salva le selezioni fatte sulla ruota.
+* **Perché:** Permette all'utente (e al terapeuta, in una fase successiva) di vedere pattern ricorrenti (es. "Sei stato spesso sul blu questa settimana").
+
+### 2. "Grounding Exercises" (Tecniche di Radicamento)
+
+In momenti di forte ansia o attacchi di panico, l'utente ha bisogno di esercizi immediati.
+
+* **Cosa aggiungere:** Una funzione nel componente SOS che guida l'utente nella **tecnica del 5-4-3-2-1** (identificare 5 cose che vedi, 4 che senti, ecc.).
+* **Implementazione:** Un semplice timer o una sequenza di slide interattive nel JSON.
+
+### 3. Filtro per la Privacy ("Panic Button")
+
+Chi ha problemi mentali spesso teme il giudizio o che qualcuno veda cosa sta scrivendo sul telefono.
+
+* **Cosa aggiungere:** Un tasto rapido (es. un'icona a forma di "X" o "Esc") che, se premuto, nasconde immediatamente i contenuti sensibili o reindirizza a una pagina neutra (come Google o il meteo).
+* **Perché:** Aumenta il senso di sicurezza dell'utente.
+
+### 4. Risorse Certificate e Geocalizzazione
+
+Il tasto SOS è ottimo, ma potrebbe essere arricchito.
+
+* **Cosa aggiungere:** Link diretti ai numeri verdi nazionali (es. Telefono Amico) o una mappa statica che mostra i centri di igiene mentale più vicini.
+* **Perché:** Dimostra che l'app non è isolata, ma è un ponte verso il mondo reale delle cure.
+
+---
+
+### 5. Raffinatezza Psicologica (Il Pantheon)
+
+Il tuo sistema di archetipi è molto profondo. Per la demo, potresti aggiungere:
+
+* **Test di autovalutazione:** Invece di inserire solo "pensieri", potresti creare un mini-questionario di 5 domande che assegna i punti agli archetipi in automatico.
+* **Audio-Meditazioni:** Un piccolo player audio che riproduce un rumore bianco o una guida vocale diversa per ogni archetipo dominante.
+
+---
+
+### Cosa dire durante la presentazione (Il "Pitch")
+
+Oltre al codice, la narrazione è fondamentale. Ecco 3 punti chiave su cui puntare:
+
+1. **Privacy by Design:** "I dati sono salvati in un JSON locale che si autodistrugge a fine sessione. Non tracciamo l'utente, proteggiamo il suo spazio sacro."
+2. **Accessibilità Cognitiva:** "L'interfaccia scura (Dark Mode) e l'uso dei colori riducono il carico cognitivo e lo stress visivo."
+3. **Empowerment, non Diagnosi:** "L'app non sostituisce il medico, ma aiuta l'utente a dare un nome a ciò che prova (alfabetizzazione emotiva)."
+
+---
+
+### Prossimo passo tecnico
+
+Vuoi che implementiamo nel file `app.js` la funzione **Panic Button** che pulisce la sessione e reindirizza l'utente se si sente osservato?

@@ -286,39 +286,25 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <div id="profile-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:2000; justify-content:center; align-items:center;">
+        <div style="background:#1a1a1a; padding:30px; border-radius:20px; border:1px solid var(--accent-purple); width:90%; max-width:400px; text-align:center;">
+            <h2 style="color:var(--accent-purple); margin-top:0;">Profilo Utente</h2>
+            <p>Inserisci il tuo nome per personalizzare i log della demo:</p>
+            <input type="text" id="user-name-input" placeholder="Tuo Nome" style="width:100%; padding:10px; margin:20px 0; border-radius:10px; border:1px solid #333; background:#000; color:white;">
+            <div style="display:flex; gap:10px;">
+                <button onclick="saveProfile()" style="flex:1; padding:10px; background:var(--accent-purple); color:black; border:none; border-radius:10px; cursor:pointer; font-weight:bold;">Salva</button>
+                <button onclick="closeProfile()" style="flex:1; padding:10px; background:#333; color:white; border:none; border-radius:10px; cursor:pointer;">Chiudi</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+
     <script>
-        function updateVotesUI() {
-            let db = getDB();
-            if(!db.votes) db.votes = {};
-            
-            const ids = ['tracker', 'grounding', 'panic', 'resources', 'pantheon'];
-            ids.forEach(id => {
-                const countEl = document.getElementById('count-' + id);
-                const btnEl = document.getElementById('btn-' + id);
-                if(countEl) countEl.innerText = (db.votes[id] || 0) + " voti";
-                
-                if(sessionStorage.getItem('voted_' + id)) {
-                    btnEl.classList.add('voted');
-                    btnEl.innerText = "❤️ Votato";
-                }
-            });
-        }
-
-        function vote(id) {
-            if(sessionStorage.getItem('voted_' + id)) return;
-
-            let db = getDB();
-            if(!db.votes) db.votes = {};
-            db.votes[id] = (db.votes[id] || 0) + 1;
-            db.logs.push(`[${db.user.name}] | VOTO_ROADMAP | Feature: ${id}`);
-            saveDB(db);
-
-            sessionStorage.setItem('voted_' + id, 'true');
-            updateVotesUI();
-        }
-
-        document.addEventListener('DOMContentLoaded', updateVotesUI);
+        // Opzionale: piccoli aggiustamenti grafici all'avvio
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Sistema pronto.");
+        });
     </script>
 </body>
 </html>
