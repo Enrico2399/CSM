@@ -106,3 +106,11 @@ window.saveProfile = function() {
         alert("Inserisci un nome valido.");
     }
 };
+
+window.clearAllData = function() {
+    if(confirm("Sei sicuro? Questa azione eliminerà il tuo nome e tutti i salvataggi locali.")) {
+        localStorage.clear();
+        alert("Dati eliminati. La pagina verrà ricaricata.");
+        window.location.reload();
+    }
+};
